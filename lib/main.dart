@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'presentations/widgets/welcome_page.dart';
+import 'presentations/pages/signin_page.dart';
+
 
 
 void main() {
@@ -12,12 +13,12 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget  {
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     const title = 'AI Word Chain';
     return MaterialApp(
       title: title,
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const WelcomePage(title: title),
+      home: SignInPage(),
     );
   }
 }
