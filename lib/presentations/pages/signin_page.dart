@@ -46,7 +46,7 @@ class _Logo extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            "Welcome to Flutter!",
+            "AI Word Chain",
             textAlign: TextAlign.center,
             style: isSmallScreen
                 ? Theme.of(context).textTheme.headline5
@@ -95,7 +95,9 @@ class __FormContentState extends State<_FormContent>
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(maxWidth: 300),
+      constraints: const BoxConstraints(
+        maxWidth: 300,
+        maxHeight:340),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -165,7 +167,8 @@ class __FormContentState extends State<_FormContent>
                           decoration: InputDecoration(
                               labelText: 'Password',
                               hintText: 'Enter your password',
-                              prefixIcon: const Icon(Icons.lock_outline_rounded),
+                              prefixIcon:
+                                  const Icon(Icons.lock_outline_rounded),
                               border: const OutlineInputBorder(),
                               suffixIcon: IconButton(
                                 icon: Icon(_isPasswordVisible
