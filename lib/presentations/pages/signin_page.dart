@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'lobby_page.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -83,7 +84,8 @@ class __FormContentState extends State<_FormContent>
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, animationDuration: Duration.zero, vsync: this);
+    _tabController =
+        TabController(length: 2, animationDuration: Duration.zero, vsync: this);
     super.initState();
   }
 
@@ -255,12 +257,12 @@ class __FormContentState extends State<_FormContent>
           switch (_tabController.index) {
             case 0:
               if (_guestKey.currentState?.validate() ?? false) {
-                /// do something
+                Navigator.pushReplacementNamed(context, '/lobby');
               }
               break;
             case 1:
               if (_loginKey.currentState?.validate() ?? false) {
-                /// do something
+                Navigator.pushReplacementNamed(context, '/lobby');
               }
               break;
             default:
