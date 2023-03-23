@@ -78,11 +78,12 @@ class __FormContentState extends State<_FormContent>
     Tab(text: 'ログイン'),
   ];
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _guestKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _loginKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, animationDuration: Duration.zero, vsync: this);
     super.initState();
   }
 
@@ -95,9 +96,7 @@ class __FormContentState extends State<_FormContent>
   @override
   Widget build(BuildContext context) {
     return Container(
-      constraints: const BoxConstraints(
-        maxWidth: 300,
-        maxHeight:340),
+      constraints: const BoxConstraints(maxWidth: 300),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -112,18 +111,44 @@ class __FormContentState extends State<_FormContent>
             unselectedLabelColor: Colors.black,
             tabs: _tabs,
           ),
-          Expanded(
+          Container(
+            constraints: const BoxConstraints(maxHeight: 250),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(8.0)),
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
             child: TabBarView(
               controller: _tabController,
               children: [
                 // ゲスト用のコンテンツを追加
                 Container(
-                  child: Text('ゲスト'),
+                  padding: EdgeInsetsDirectional.symmetric(vertical: 16.0),
+                  child: Form(
+                    key: _guestKey,
+                    child: Center(
+                        child: TextFormField(
+                      validator: (value) {
+                        // add email validation
+                        if (value == null || value.isEmpty) {
+                          return 'ニックネームが入力されていません';
+                        }
+
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'ニックネーム',
+                        hintText: 'ニックネームを入力してください',
+                        prefixIcon: Icon(Icons.person),
+                        border: OutlineInputBorder(),
+                      ),
+                    )),
+                  ),
                 ),
                 // ログイン用のコンテンツ
                 Container(
+                  padding: EdgeInsetsDirectional.symmetric(vertical: 16.0),
                   child: Form(
-                    key: _formKey,
+                    key: _loginKey,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -195,29 +220,6 @@ class __FormContentState extends State<_FormContent>
                           dense: true,
                           contentPadding: const EdgeInsets.all(0),
                         ),
-                        _gap(),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text(
-                                'Sign in',
-                                style: TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            onPressed: () {
-                              if (_formKey.currentState?.validate() ?? false) {
-                                /// do something
-                              }
-                            },
-                          ),
-                        ),
                       ],
                     ),
                   ),
@@ -225,7 +227,45 @@ class __FormContentState extends State<_FormContent>
               ],
             ),
           ),
+          _startButton(),
         ],
+      ),
+    );
+  }
+
+  SizedBox _startButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        icon: const Icon(
+          Icons.play_arrow_rounded,
+          color: Colors.white,
+        ),
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        ),
+        label: const Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Text(
+            '開始',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ),
+        onPressed: () {
+          switch (_tabController.index) {
+            case 0:
+              if (_guestKey.currentState?.validate() ?? false) {
+                /// do something
+              }
+              break;
+            case 1:
+              if (_loginKey.currentState?.validate() ?? false) {
+                /// do something
+              }
+              break;
+            default:
+          }
+        },
       ),
     );
   }
