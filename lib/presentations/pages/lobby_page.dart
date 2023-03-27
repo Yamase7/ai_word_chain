@@ -7,7 +7,7 @@ class LobbyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final bool isSmallScreen = screenSize.width < 600;
-    
+
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -117,7 +117,7 @@ class LobbyPage extends StatelessWidget {
   }
 
   Widget _storyThemeButton(BuildContext context, int index) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         // ここで選択したストーリーテーマを処理する
       },
