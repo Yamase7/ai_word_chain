@@ -6,14 +6,18 @@ class LobbyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
-    final bool isSmallScreen = screenSize.width < 600;
+    final bool isSmallScreen = screenSize.width < 480;
+    final Orientation orientation = MediaQuery.of(context).orientation;
 
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: Container(
+            width: screenSize.width * 0.9,
             padding: const EdgeInsets.all(16.0),
-            constraints: const BoxConstraints(maxWidth: 1200),
+            constraints: BoxConstraints(
+                maxHeight: isSmallScreen ? double.infinity : 800,
+                maxWidth: 1200),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey, width: 2),
               borderRadius: BorderRadius.circular(8),
@@ -22,7 +26,7 @@ class LobbyPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _header(context),
-                _body(context),
+                Expanded(child: _body(context, isSmallScreen)),
               ],
             ),
           ),
@@ -45,7 +49,7 @@ class LobbyPage extends StatelessWidget {
   Widget _backButton(BuildContext context) {
     return ElevatedButton.icon(
       icon: const Icon(Icons.arrow_back),
-      label: const Text('戻る'),
+      label: const Text("戻る"),
       onPressed: () {
         Navigator.pop(context);
       },
@@ -56,53 +60,56 @@ class LobbyPage extends StatelessWidget {
     return const FlutterLogo(size: 100);
   }
 
-  Widget _body(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 2,
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 2),
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            child: _playerList(),
-          ),
-        ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            padding: const EdgeInsets.all(16.0),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey, width: 2),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: _storyThemes(context),
-          ),
-        ),
-      ],
-    );
+  Widget _body(BuildContext context, bool isSmallScreen) {
+    return isSmallScreen
+        ? Column(
+            children: [
+              Expanded(child: _playerList()),
+              Expanded(child: _themesAndButtons(context)),
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(child: _playerList()),
+              Expanded(child: _themesAndButtons(context)),
+            ],
+          );
   }
 
   Widget _playerList() {
-    return SizedBox(
-      height: 600,
-      width: 400,
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 2),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: ListView.builder(
-        itemCount: 5, // プレイヤーの数
+        itemCount: 12, // プレイヤーの数
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text('Player ${index + 1}'),
+            title: Text("Player ${index + 1}"),
           );
         },
       ),
     );
   }
 
+  Widget _themesAndButtons(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(child: _storyThemes(context)),
+        _inviteAndStartButtons(context),
+      ],
+    );
+  }
+
   Widget _storyThemes(BuildContext context) {
-    return SizedBox(
-      height: 300,
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey, width: 2),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
       child: GridView.count(
         shrinkWrap: true,
         physics: const BouncingScrollPhysics(),
@@ -119,7 +126,7 @@ class LobbyPage extends StatelessWidget {
   Widget _storyThemeButton(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        // ここで選択したストーリーテーマを処理する
+// ここで選択したストーリーテーマを処理する
       },
       child: Container(
         decoration: BoxDecoration(
@@ -130,7 +137,7 @@ class LobbyPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.book, size: 50),
-            Text('Theme ${index + 1}'),
+            Text("Theme ${index + 1}"),
           ],
         ),
       ),
@@ -138,44 +145,27 @@ class LobbyPage extends StatelessWidget {
   }
 
   Widget _inviteAndStartButtons(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton.icon(
-          onPressed: () {
-            // 招待リンクを生成・共有する処理
-          },
-          icon: const Icon(Icons.link),
-          label: const Text('招待'),
-        ),
-        ElevatedButton.icon(
-          onPressed: () {
-            // ゲームを開始する処理
-          },
-          icon: const Icon(Icons.play_arrow),
-          label: const Text('開始'),
-        ),
-      ],
-    );
-  }
-
-  Widget _inviteButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        // 招待リンクを生成・共有する処理
-      },
-      icon: const Icon(Icons.link),
-      label: const Text('招待'),
-    );
-  }
-
-  Widget _startButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        // 招待リンクを生成・共有する処理
-      },
-      icon: const Icon(Icons.link),
-      label: const Text('招待'),
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+//招待リンクを生成・共有する処理
+            },
+            icon: const Icon(Icons.link),
+            label: const Text("招待"),
+          ),
+          ElevatedButton.icon(
+            onPressed: () {
+// ゲームを開始する処理
+            },
+            icon: const Icon(Icons.play_arrow),
+            label: const Text("開始"),
+          ),
+        ],
+      ),
     );
   }
 }
